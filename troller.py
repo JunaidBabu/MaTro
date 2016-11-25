@@ -5,15 +5,17 @@ import time, threading
 import calendar
 
 from secrets import *
-
+import json
 # secrets.py:
 # bot_token = ''
 # fb_app_id = ""
 # fb_app_secret = ""
 
-
 bot = telegram.Bot(bot_token)
-reply_markup = {"inline_keyboard": [[{"text": "👍","callback_data": "1"},{"text": "😒","callback_data": "2"}],[{"text": "😆","callback_data": "4"},{"text": "😡","callback_data": "6"}],[]]}
+def putpoint(data, fb_id):
+    bla = {'data': data, '1':0, '2': 0, '4': 0, '6': 0}
+    return json.dumps(bla)
+
 
 
 
@@ -24,7 +26,14 @@ pages = ['632474226810626', '441269415895560', '181750138656093','30103662008272
 
 def some_action(post):
     print(post['id'])
-    reply_markup['inline_keyboard'][2]=[{"text": "Original link","url": "http://facebook.com/"+post['id']}]
+    reply_markup = {"inline_keyboard": [
+        # [{"text": "👍","callback_data": putpoint(1, post['id'])},
+        # {"text": "😒","callback_data": putpoint(2, post['id'])}],
+        # [{"text": "😆","callback_data": putpoint(4, post['id'])},
+        # {"text": "😡","callback_data": putpoint(6, post['id'])}],
+        []
+        ]}
+    reply_markup['inline_keyboard'][0]=[{"text": "Original link","url": "http://facebook.com/"+post['id']}]
     try:
         bot.sendPhoto(chat_id = "-1001080424959", photo = "http://graph.facebook.com/"+post['id'].split('_', 1)[1]+"/picture?type=normal", caption = post['message']+'\n\n@MalluTrollz', reply_markup=reply_markup)
     except Exception as e: print (str(e))
